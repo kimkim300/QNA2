@@ -11,7 +11,7 @@ const firebaseConfig = {
 
 // Firebase 초기화
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, orderBy, query, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, orderBy, query } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -75,19 +75,29 @@ class QuestionBoard {
 
         // 이벤트 위임을 사용한 동적 버튼 이벤트
         document.addEventListener('click', (e) => {
-            if (e.target.closest('.answer-btn')) {
-                const questionId = e.target.closest('.answer-btn').dataset.questionId;
-                this.openAnswerModal(questionId);
-            } else if (e.target.closest('.delete-btn')) {
-                const questionId = e.target.closest('.delete-btn').dataset.questionId;
-                this.openDeleteModal(questionId);
-            } else if (e.target.closest('.page-link-prev') || e.target.closest('.page-link-next') || e.target.closest('.page-link-number')) {
-                e.preventDefault();
-                const pageLink = e.target.closest('.page-link');
-                if (pageLink && !pageLink.parentElement.classList.contains('disabled')) {
-                    const page = parseInt(pageLink.dataset.page);
-                    this.goToPage(page);
+            try {
+                if (e.target.closest('.answer-btn')) {
+                    const questionId = e.target.closest('.answer-btn').dataset.questionId;
+                    if (questionId && typeof this.openAnswerModal === 'function') {
+                        this.openAnswerModal(questionId);
+                    }
+                } else if (e.target.closest('.delete-btn')) {
+                    const questionId = e.target.closest('.delete-btn').dataset.questionId;
+                    if (questionId && typeof this.openDeleteModal === 'function') {
+                        this.openDeleteModal(questionId);
+                    }
+                } else if (e.target.closest('.page-link-prev') || e.target.closest('.page-link-next') || e.target.closest('.page-link-number')) {
+                    e.preventDefault();
+                    const pageLink = e.target.closest('.page-link');
+                    if (pageLink && !pageLink.parentElement.classList.contains('disabled')) {
+                        const page = parseInt(pageLink.dataset.page);
+                        if (typeof this.goToPage === 'function') {
+                            this.goToPage(page);
+                        }
+                    }
                 }
+            } catch (error) {
+                console.error('이벤트 처리 중 오류 발생:', error);
             }
         });
 
@@ -165,12 +175,15 @@ class QuestionBoard {
         try {
             this.showDbOperationStatus('질문을 등록하는 중...');
             
+            // 현재 시간을 JavaScript Date 객체로 생성
+            const currentTime = new Date();
+            
             const questionData = {
                 title: questionTitle,
                 content: questionContent,
-                createdAt: serverTimestamp(),
+                createdAt: currentTime,
                 createdBy: '익명 사용자',
-                lastModified: serverTimestamp()
+                lastModified: currentTime
             };
 
             const docRef = await addDoc(collection(db, 'questions'), questionData);
@@ -178,9 +191,7 @@ class QuestionBoard {
             // 새 질문을 배열에 추가
             const newQuestion = {
                 id: docRef.id,
-                ...questionData,
-                createdAt: new Date(),
-                lastModified: new Date()
+                ...questionData
             };
             
             this.questions.unshift(newQuestion);
@@ -218,9 +229,12 @@ class QuestionBoard {
         try {
             this.showDbOperationStatus('답변을 등록하는 중...');
             
+            // 현재 시간을 JavaScript Date 객체로 생성
+            const currentTime = new Date();
+            
             const answerData = {
                 content: answerContent,
-                createdAt: serverTimestamp(),
+                createdAt: currentTime,
                 createdBy: '익명 사용자'
             };
 
@@ -236,12 +250,12 @@ class QuestionBoard {
             
             await updateDoc(questionRef, {
                 answers: answers,
-                lastModified: serverTimestamp()
+                lastModified: currentTime
             });
 
             // 로컬 상태 업데이트
             question.answers = answers;
-            question.lastModified = new Date();
+            question.lastModified = currentTime;
             
             this.renderQuestions();
             this.showNotification('답변이 성공적으로 등록되었습니다!', 'success');
@@ -598,12 +612,48 @@ class QuestionBoard {
 }
 
 // 전역 변수로 질문 게시판 인스턴스 생성
-let questionBoard;
+let questionBoard = null;
 
 // DOM이 로드된 후 초기화
 document.addEventListener('DOMContentLoaded', () => {
-    questionBoard = new QuestionBoard();
+    try {
+        questionBoard = new QuestionBoard();
+        // 전역 변수로 노출 (디버깅용)
+        window.questionBoard = questionBoard;
+        console.log('질문 게시판이 성공적으로 초기화되었습니다.');
+    } catch (error) {
+        console.error('질문 게시판 초기화 중 오류 발생:', error);
+    }
 });
 
-// 전역 함수들 (HTML에서 직접 호출)
-window.questionBoard = questionBoard;
+// 안전한 전역 함수들 (HTML에서 직접 호출하지 않음)
+window.questionBoard = {
+    openAnswerModal: (questionId) => {
+        if (questionBoard && typeof questionBoard.openAnswerModal === 'function') {
+            questionBoard.openAnswerModal(questionId);
+        } else {
+            console.warn('질문 게시판이 아직 초기화되지 않았습니다.');
+        }
+    },
+    openDeleteModal: (questionId) => {
+        if (questionBoard && typeof questionBoard.openDeleteModal === 'function') {
+            questionBoard.openDeleteModal(questionId);
+        } else {
+            console.warn('질문 게시판이 아직 초기화되지 않았습니다.');
+        }
+    },
+    goToPage: (page) => {
+        if (questionBoard && typeof questionBoard.goToPage === 'function') {
+            questionBoard.goToPage(page);
+        } else {
+            console.warn('질문 게시판이 아직 초기화되지 않았습니다.');
+        }
+    },
+    confirmDeleteQuestion: () => {
+        if (questionBoard && typeof questionBoard.confirmDeleteQuestion === 'function') {
+            questionBoard.confirmDeleteQuestion();
+        } else {
+            console.warn('질문 게시판이 아직 초기화되지 않았습니다.');
+        }
+    }
+};

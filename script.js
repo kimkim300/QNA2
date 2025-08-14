@@ -274,7 +274,13 @@ class QuestionBoard {
 
     renderQuestions() {
         const questionsList = document.querySelector('.questions-list');
+        const questionCount = document.getElementById('questionCount');
         if (!questionsList) return;
+
+        // 질문 개수 업데이트
+        if (questionCount) {
+            questionCount.textContent = `${this.questions.length}개`;
+        }
 
         const startIndex = (this.currentPage - 1) * this.questionsPerPage;
         const endIndex = startIndex + this.questionsPerPage;

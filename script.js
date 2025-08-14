@@ -1,722 +1,578 @@
-/* 기본 스타일 */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    color: #333;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    min-height: 100vh;
-}
-
-/* 컨테이너 스타일 */
-.container-fluid {
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-/* 메인 콘텐츠 레이아웃 */
-.main-content {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 2rem;
-    margin-top: 2rem;
-}
-
-/* 질문 작성 폼 섹션 */
-.question-form-section {
-    position: sticky;
-    top: 2rem;
-    height: fit-content;
-}
-
-.question-form-section .card {
-    border: none;
-    border-radius: 15px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-.question-form-section .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-}
-
-.question-form-section .card-header {
-    background: linear-gradient(135deg, #007bff, #0056b3);
-    border: none;
-    padding: 1.5rem;
-}
-
-.question-form-section .card-body {
-    padding: 2rem;
-}
-
-/* 질문 목록 섹션 */
-.questions-section .card {
-    border: none;
-    border-radius: 15px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-.questions-section .card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-}
-
-.questions-section .card-header {
-    background: linear-gradient(135deg, #28a745, #1e7e34);
-    border: none;
-    padding: 1.5rem;
-}
-
-/* 폼 스타일 */
-.form-label {
-    font-weight: 600;
-    color: #495057;
-    margin-bottom: 0.5rem;
-}
-
-.form-control {
-    border: 2px solid #e9ecef;
-    border-radius: 10px;
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    background-color: #fff;
-}
-
-.form-control:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    background-color: #fff;
-}
-
-.form-control::placeholder {
-    color: #adb5bd;
-    font-style: italic;
-}
-
-.form-control-lg {
-    font-size: 1.1rem;
-    padding: 1rem 1.25rem;
-}
-
-/* 버튼 스타일 */
-.btn {
-    border-radius: 10px;
-    font-weight: 600;
-    padding: 0.75rem 1.5rem;
-    transition: all 0.3s ease;
-    border: none;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #007bff, #0056b3);
-}
-
-.btn-primary:hover {
-    background: linear-gradient(135deg, #0056b3, #004085);
-}
-
-.btn-success {
-    background: linear-gradient(135deg, #28a745, #1e7e34);
-}
-
-.btn-success:hover {
-    background: linear-gradient(135deg, #1e7e34, #155724);
-}
-
-.btn-info {
-    background: linear-gradient(135deg, #17a2b8, #138496);
-}
-
-.btn-info:hover {
-    background: linear-gradient(135deg, #138496, #0f6674);
-}
-
-.btn-danger {
-    background: linear-gradient(135deg, #dc3545, #c82333);
-}
-
-.btn-danger:hover {
-    background: linear-gradient(135deg, #c82333, #a71e2a);
-}
-
-.btn-secondary {
-    background: linear-gradient(135deg, #6c757d, #545b62);
-}
-
-.btn-secondary:hover {
-    background: linear-gradient(135deg, #545b62, #3d4449);
-}
-
-/* 질문 목록 스타일 */
-.questions-container {
-    max-height: 600px;
-    overflow-y: auto;
-    padding: 0;
-}
-
-.question-item {
-    background: #fff;
-    border: 1px solid #e9ecef;
-    border-radius: 12px;
-    margin: 1rem;
-    padding: 1.5rem;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.question-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    border-color: #007bff;
-}
-
-.question-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: linear-gradient(135deg, #007bff, #0056b3);
-    transform: scaleY(0);
-    transition: transform 0.3s ease;
-}
-
-.question-item:hover::before {
-    transform: scaleY(1);
-}
-
-.question-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-}
-
-.question-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #212529;
-    margin-bottom: 0.5rem;
-    line-height: 1.3;
-}
-
-.question-meta {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-size: 0.9rem;
-    color: #6c757d;
-    margin-bottom: 1rem;
-}
-
-.question-meta i {
-    color: #007bff;
-}
-
-.question-content {
-    color: #495057;
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-    font-size: 1rem;
-}
-
-.question-actions {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-}
-
-.question-actions .btn {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-    border-radius: 8px;
-}
-
-/* 답변 스타일 */
-.answers-section {
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 2px solid #f8f9fa;
-}
-
-.answers-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.answers-count {
-    font-weight: 600;
-    color: #28a745;
-    font-size: 1.1rem;
-}
-
-.answer-item {
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 10px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    transition: all 0.3s ease;
-}
-
-.answer-item:hover {
-    background: #e9ecef;
-    border-color: #28a745;
-}
-
-.answer-content {
-    color: #495057;
-    line-height: 1.6;
-    margin-bottom: 0.75rem;
-}
-
-.answer-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.85rem;
-    color: #6c757d;
-}
-
-.answer-author {
-    font-weight: 600;
-    color: #28a745;
-}
-
-/* 페이지네이션 스타일 */
-.pagination-container {
-    background: #fff;
-    border-top: 1px solid #e9ecef;
-}
-
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 0;
-}
-
-.pagination .btn {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-    border-radius: 8px;
-    min-width: 40px;
-}
-
-.pagination .btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.pagination .btn:not(:disabled):hover {
-    transform: translateY(-1px);
-}
-
-/* 모달 스타일 */
-.modal-content {
-    border: none;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-}
-
-.modal-header {
-    border: none;
-    padding: 1.5rem;
-}
-
-.modal-body {
-    padding: 2rem;
-}
-
-.modal-footer {
-    border: none;
-    padding: 1.5rem;
-    gap: 0.75rem;
-}
-
-/* 모달 입력 필드 스타일 */
-.modal .form-control {
-    background-color: #fff !important;
-    color: #333 !important;
-    border: 2px solid #e9ecef;
-    position: relative;
-    z-index: 1;
-}
-
-.modal .form-control:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    outline: none;
-}
-
-.modal .form-control::placeholder {
-    color: #adb5bd;
-}
-
-.modal .form-label {
-    color: #495057;
-    font-weight: 600;
-}
-
-.modal .btn {
-    border-radius: 10px;
-    font-weight: 600;
-}
-
-.modal textarea.form-control {
-    resize: vertical;
-    min-height: 100px;
-}
-
-.modal input.form-control {
-    height: auto;
-}
-
-/* 모달 z-index 강화 */
-.modal-backdrop {
-    z-index: 1040 !important;
-}
-
-.modal {
-    z-index: 1050 !important;
-}
-
-.modal .form-control:focus-visible {
-    outline: 2px solid #007bff;
-    outline-offset: 2px;
-}
-
-/* 상태 표시 스타일 */
-.firebase-status,
-.db-connection-status,
-.db-operation-status {
-    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
-    border: 2px solid #ffc107;
-    border-radius: 10px;
-    padding: 1rem 1.5rem;
-    margin: 1rem 0;
-    color: #856404;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    transition: all 0.3s ease;
-}
-
-.firebase-status.connected,
-.db-connection-status.connected {
-    background: linear-gradient(135deg, #d4edda, #c3e6cb);
-    border-color: #28a745;
-    color: #155724;
-}
-
-.firebase-status.disconnected,
-.db-connection-status.disconnected {
-    background: linear-gradient(135deg, #f8d7da, #f5c6cb);
-    border-color: #dc3545;
-    color: #721c24;
-}
-
-.firebase-status i,
-.db-connection-status i,
-.db-operation-status i {
-    font-size: 1.2rem;
-}
-
-.firebase-status.loading i,
-.db-connection-status.loading i,
-.db-operation-status.loading i {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-/* 보안 경고 메시지 */
-.security-warning {
-    background: linear-gradient(135deg, #d4edda, #c3e6cb);
-    border: 2px solid #28a745;
-    border-radius: 10px;
-    padding: 1.5rem;
-    margin: 1.5rem 0;
-    color: #155724;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.2);
-}
-
-.security-warning i {
-    font-size: 1.5rem;
-    color: #28a745;
-}
-
-/* 알림 토스트 스타일 */
-.toast {
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-}
-
-.toast-header {
-    background: linear-gradient(135deg, #007bff, #0056b3);
-    color: white;
-    border: none;
-    border-radius: 10px 10px 0 0;
-}
-
-.toast-header .btn-close {
-    filter: invert(1);
-}
-
-/* 헤더 스타일 */
-.display-4 {
-    background: linear-gradient(135deg, #007bff, #0056b3);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-shadow: none;
-}
-
-.lead {
-    color: #6c757d;
-    font-weight: 500;
-}
-
-/* 반응형 디자인 */
-@media (max-width: 1200px) {
-    .main-content {
-        grid-template-columns: 1fr 1.5fr;
-        gap: 1.5rem;
+// Firebase 설정
+const firebaseConfig = {
+  apiKey: "AIzaSyD4EmClvytRl8k2aS4Y98oIn7oTYIS8g_4",
+  authDomain: "qna0814-f372c.firebaseapp.com",
+  projectId: "qna0814-f372c",
+  storageBucket: "qna0814-f372c.firebasestorage.app",
+  messagingSenderId: "30085800074",
+  appId: "1:30085800074:web:2a04dda72bf3c0498d0d73",
+  measurementId: "G-LEB0WZR84M"
+};
+
+// Firebase 초기화
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, orderBy, query, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// 질문 게시판 클래스
+class QuestionBoard {
+    constructor() {
+        this.questions = [];
+        this.currentQuestionId = null;
+        this.currentPage = 1;
+        this.questionsPerPage = 5;
+        this.db = db;
+        this.init();
+    }
+
+    async init() {
+        try {
+            this.updateConnectionStatus('connecting');
+            await this.waitForFirebase();
+            this.bindEvents();
+            await this.loadQuestionsFromFirestore();
+            this.updateConnectionStatus('connected');
+            this.showSecurityWarning();
+            this.showSecurityInfo();
+        } catch (error) {
+            console.error('초기화 오류:', error);
+            this.updateConnectionStatus('error');
+            this.showNotification('Firebase 연결에 실패했습니다.', 'error');
+        }
+    }
+
+    async waitForFirebase() {
+        return new Promise((resolve) => {
+            if (typeof db !== 'undefined') {
+                resolve();
+            } else {
+                setTimeout(() => this.waitForFirebase().then(resolve), 100);
+            }
+        });
+    }
+
+    bindEvents() {
+        // 질문 제출 폼
+        const questionForm = document.getElementById('questionForm');
+        if (questionForm) {
+            questionForm.addEventListener('submit', (e) => this.handleQuestionSubmit(e));
+        }
+
+        // 답변 제출 폼
+        const answerForm = document.getElementById('answerForm');
+        if (answerForm) {
+            answerForm.addEventListener('submit', (e) => this.handleAnswerSubmit(e));
+        }
+
+        // 모달 이벤트 설정
+        this.setupModalEvents();
+    }
+
+    setupModalEvents() {
+        const answerModal = document.getElementById('answerModal');
+        const deleteModal = document.getElementById('deleteModal');
+
+        if (answerModal) {
+            answerModal.addEventListener('shown.bs.modal', () => {
+                const answerContent = document.getElementById('answerContent');
+                if (answerContent) {
+                    setTimeout(() => {
+                        answerContent.focus();
+                        answerContent.click();
+                        answerContent.select();
+                    }, 300);
+                }
+            });
+
+            answerModal.addEventListener('hidden.bs.modal', () => {
+                const answerForm = document.getElementById('answerForm');
+                if (answerForm) {
+                    answerForm.reset();
+                }
+            });
+        }
+
+        if (deleteModal) {
+            deleteModal.addEventListener('shown.bs.modal', () => {
+                const deleteConfirmBtn = document.getElementById('deleteConfirmBtn');
+                if (deleteConfirmBtn) {
+                    deleteConfirmBtn.focus();
+                }
+            });
+        }
+    }
+
+    async loadQuestionsFromFirestore() {
+        try {
+            this.showDbOperationStatus('질문을 불러오는 중...');
+            const q = query(collection(db, 'questions'), orderBy('createdAt', 'desc'));
+            const querySnapshot = await getDocs(q);
+            
+            this.questions = [];
+            querySnapshot.forEach((doc) => {
+                const question = { id: doc.id, ...doc.data() };
+                this.questions.push(question);
+            });
+
+            this.renderQuestions();
+            this.showDbOperationStatus('질문 로드 완료');
+            setTimeout(() => this.showDbOperationStatus(''), 2000);
+        } catch (error) {
+            console.error('질문 로드 오류:', error);
+            this.showNotification('질문을 불러오는데 실패했습니다.', 'error');
+            this.showDbOperationStatus('질문 로드 실패');
+        }
+    }
+
+    async handleQuestionSubmit(e) {
+        e.preventDefault();
+        
+        const questionTitle = document.getElementById('questionTitle').value.trim();
+        const questionContent = document.getElementById('questionContent').value.trim();
+        
+        if (!questionTitle || !questionContent) {
+            this.showNotification('제목과 내용을 모두 입력해주세요.', 'error');
+            return;
+        }
+
+        try {
+            this.showDbOperationStatus('질문을 등록하는 중...');
+            
+            const questionData = {
+                title: questionTitle,
+                content: questionContent,
+                createdAt: serverTimestamp(),
+                createdBy: '익명 사용자',
+                lastModified: serverTimestamp()
+            };
+
+            const docRef = await addDoc(collection(db, 'questions'), questionData);
+            
+            // 새 질문을 배열에 추가
+            const newQuestion = {
+                id: docRef.id,
+                ...questionData,
+                createdAt: new Date(),
+                lastModified: new Date()
+            };
+            
+            this.questions.unshift(newQuestion);
+            this.currentPage = 1; // 첫 페이지로 이동
+            
+            // 폼 초기화
+            e.target.reset();
+            
+            this.renderQuestions();
+            this.showNotification('질문이 성공적으로 등록되었습니다!', 'success');
+            this.showDbOperationStatus('질문 등록 완료');
+            setTimeout(() => this.showDbOperationStatus(''), 2000);
+        } catch (error) {
+            console.error('질문 제출 오류:', error);
+            this.showNotification('질문 등록에 실패했습니다.', 'error');
+            this.showDbOperationStatus('질문 등록 실패');
+        }
+    }
+
+    async handleAnswerSubmit(e) {
+        e.preventDefault();
+        
+        const answerContent = document.getElementById('answerContent').value.trim();
+        
+        if (!answerContent) {
+            this.showNotification('답변 내용을 입력해주세요.', 'error');
+            return;
+        }
+
+        if (!this.currentQuestionId) {
+            this.showNotification('질문을 찾을 수 없습니다.', 'error');
+            return;
+        }
+
+        try {
+            this.showDbOperationStatus('답변을 등록하는 중...');
+            
+            const answerData = {
+                content: answerContent,
+                createdAt: serverTimestamp(),
+                createdBy: '익명 사용자'
+            };
+
+            const questionRef = doc(db, 'questions', this.currentQuestionId);
+            const question = this.questions.find(q => q.id === this.currentQuestionId);
+            
+            if (!question) {
+                throw new Error('질문을 찾을 수 없습니다.');
+            }
+
+            const answers = question.answers || [];
+            answers.push(answerData);
+            
+            await updateDoc(questionRef, {
+                answers: answers,
+                lastModified: serverTimestamp()
+            });
+
+            // 로컬 상태 업데이트
+            question.answers = answers;
+            question.lastModified = new Date();
+            
+            this.renderQuestions();
+            this.showNotification('답변이 성공적으로 등록되었습니다!', 'success');
+            
+            // 모달 닫기
+            const modal = bootstrap.Modal.getInstance(document.getElementById('answerModal'));
+            if (modal) {
+                modal.hide();
+            }
+            
+            this.showDbOperationStatus('답변 등록 완료');
+            setTimeout(() => this.showDbOperationStatus(''), 2000);
+        } catch (error) {
+            console.error('답변 제출 오류:', error);
+            this.showNotification('답변 등록에 실패했습니다.', 'error');
+            this.showDbOperationStatus('답변 등록 실패');
+        }
+    }
+
+    async confirmDeleteQuestion() {
+        if (!this.deleteQuestionId) return;
+
+        try {
+            this.showDbOperationStatus('질문을 삭제하는 중...');
+            
+            await deleteDoc(doc(db, 'questions', this.deleteQuestionId));
+            
+            // 로컬 상태에서 제거
+            this.questions = this.questions.filter(q => q.id !== this.deleteQuestionId);
+            
+            // 페이지 조정
+            const totalPages = Math.ceil(this.questions.length / this.questionsPerPage);
+            if (this.currentPage > totalPages && totalPages > 0) {
+                this.currentPage = totalPages;
+            }
+            
+            this.renderQuestions();
+            this.showNotification('질문이 삭제되었습니다.', 'success');
+            
+            // 모달 닫기
+            const modal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
+            if (modal) {
+                modal.hide();
+            }
+            
+            this.showDbOperationStatus('질문 삭제 완료');
+            setTimeout(() => this.showDbOperationStatus(''), 2000);
+        } catch (error) {
+            console.error('질문 삭제 오류:', error);
+            this.showNotification('질문 삭제에 실패했습니다.', 'error');
+            this.showDbOperationStatus('질문 삭제 실패');
+        }
+    }
+
+    renderQuestions() {
+        const questionsList = document.querySelector('.questions-list');
+        if (!questionsList) return;
+
+        const startIndex = (this.currentPage - 1) * this.questionsPerPage;
+        const endIndex = startIndex + this.questionsPerPage;
+        const currentQuestions = this.questions.slice(startIndex, endIndex);
+
+        if (currentQuestions.length === 0) {
+            questionsList.innerHTML = `
+                <div class="empty-state text-center py-5">
+                    <i class="bi bi-chat-dots display-1 text-muted"></i>
+                    <h4 class="mt-3 text-muted">아직 질문이 없습니다</h4>
+                    <p class="text-muted">첫 번째 질문을 작성해보세요!</p>
+                </div>
+            `;
+            return;
+        }
+
+        const questionsHTML = currentQuestions.map(question => this.renderQuestion(question)).join('');
+        questionsList.innerHTML = questionsHTML;
+
+        this.renderPagination();
+    }
+
+    renderQuestion(question) {
+        const answersCount = question.answers ? question.answers.length : 0;
+        const formattedDate = this.formatDate(question.createdAt);
+        
+        return `
+            <div class="question-item card mb-3 shadow-sm" data-question-id="${question.id}">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title mb-0 fw-bold text-primary">${this.escapeHtml(question.title)}</h5>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-outline-primary" onclick="questionBoard.openAnswerModal('${question.id}')">
+                                <i class="bi bi-chat-dots"></i> 답변
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="questionBoard.openDeleteModal('${question.id}')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="card-text text-secondary mb-3">${this.escapeHtml(question.content)}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="text-muted small">
+                            <i class="bi bi-person"></i> ${this.escapeHtml(question.createdBy || '익명')}
+                            <span class="ms-2"><i class="bi bi-clock"></i> ${formattedDate}</span>
+                        </div>
+                        <span class="badge bg-info">답변 ${answersCount}개</span>
+                    </div>
+                    ${this.renderAnswers(question)}
+                </div>
+            </div>
+        `;
+    }
+
+    renderAnswers(question) {
+        if (!question.answers || question.answers.length === 0) {
+            return '';
+        }
+
+        const answersHTML = question.answers.map(answer => this.renderAnswer(answer)).join('');
+        
+        return `
+            <div class="answers-section mt-3 pt-3 border-top">
+                <h6 class="fw-bold text-success mb-2">
+                    <i class="bi bi-chat-quote"></i> 답변들
+                </h6>
+                ${answersHTML}
+            </div>
+        `;
+    }
+
+    renderAnswer(answer) {
+        const formattedDate = this.formatDate(answer.createdAt);
+        
+        return `
+            <div class="answer-item mb-2 p-2 bg-light rounded">
+                <p class="mb-1">${this.escapeHtml(answer.content)}</p>
+                <div class="text-muted small">
+                    <i class="bi bi-person"></i> ${this.escapeHtml(answer.createdBy || '익명')}
+                    <span class="ms-2"><i class="bi bi-clock"></i> ${formattedDate}</span>
+                </div>
+            </div>
+        `;
+    }
+
+    renderPagination() {
+        const totalPages = Math.ceil(this.questions.length / this.questionsPerPage);
+        if (totalPages <= 1) return;
+
+        const paginationContainer = document.querySelector('.pagination-container');
+        if (!paginationContainer) return;
+
+        let paginationHTML = `
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="pagination-info">
+                    페이지 ${this.currentPage} / ${totalPages} (총 ${this.questions.length}개 질문)
+                </div>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+        `;
+
+        // 이전 페이지 버튼
+        paginationHTML += `
+            <li class="page-item ${this.currentPage === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="questionBoard.goToPage(${this.currentPage - 1})">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+            </li>
+        `;
+
+        // 페이지 번호들
+        for (let i = 1; i <= totalPages; i++) {
+            if (i === 1 || i === totalPages || (i >= this.currentPage - 1 && i <= this.currentPage + 1)) {
+                paginationHTML += `
+                    <li class="page-item ${i === this.currentPage ? 'active' : ''}">
+                        <a class="page-link" href="#" onclick="questionBoard.goToPage(${i})">${i}</a>
+                    </li>
+                `;
+            } else if (i === this.currentPage - 2 || i === this.currentPage + 2) {
+                paginationHTML += '<li class="page-item disabled"><span class="page-link">...</span></li>';
+            }
+        }
+
+        // 다음 페이지 버튼
+        paginationHTML += `
+            <li class="page-item ${this.currentPage === totalPages ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="questionBoard.goToPage(${this.currentPage + 1})">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+        </ul>
+                </nav>
+            </div>
+        `;
+
+        paginationContainer.innerHTML = paginationHTML;
+    }
+
+    goToPage(page) {
+        const totalPages = Math.ceil(this.questions.length / this.questionsPerPage);
+        if (page < 1 || page > totalPages) return;
+        
+        this.currentPage = page;
+        this.renderQuestions();
+        
+        // 페이지 상단으로 스크롤
+        const questionsList = document.querySelector('.questions-list');
+        if (questionsList) {
+            questionsList.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
+    openAnswerModal(questionId) {
+        this.currentQuestionId = questionId;
+        const modal = new bootstrap.Modal(document.getElementById('answerModal'), {
+            backdrop: 'static',
+            keyboard: true,
+            focus: true
+        });
+        modal.show();
+    }
+
+    openDeleteModal(questionId) {
+        this.deleteQuestionId = questionId;
+        const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        modal.show();
+    }
+
+    formatDate(date) {
+        if (!date) return '알 수 없음';
+        
+        let dateObj;
+        if (date.toDate) {
+            // Firestore Timestamp 객체
+            dateObj = date.toDate();
+        } else if (date instanceof Date) {
+            dateObj = date;
+        } else {
+            dateObj = new Date(date);
+        }
+
+        const now = new Date();
+        const diffTime = now.getTime() - dateObj.getTime();
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+        // 날짜만 비교 (시간 무시)
+        const dateOnly = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+        const nowOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const diffDaysOnly = Math.floor((nowOnly.getTime() - dateOnly.getTime()) / (1000 * 60 * 60 * 24));
+
+        if (diffDaysOnly === 0) {
+            return '오늘';
+        } else if (diffDaysOnly === 1) {
+            return '어제';
+        } else if (diffDaysOnly < 7) {
+            return `${diffDaysOnly}일 전`;
+        } else {
+            return dateObj.toLocaleDateString('ko-KR');
+        }
+    }
+
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    updateConnectionStatus(status) {
+        const firebaseStatus = document.getElementById('firebaseStatus');
+        const dbConnectionStatus = document.getElementById('dbConnectionStatus');
+        
+        if (firebaseStatus) {
+            firebaseStatus.className = `badge ${status === 'connected' ? 'bg-success' : status === 'connecting' ? 'bg-warning' : 'bg-danger'}`;
+            firebaseStatus.textContent = status === 'connected' ? '연결됨' : status === 'connecting' ? '연결 중' : '연결 실패';
+        }
+        
+        if (dbConnectionStatus) {
+            dbConnectionStatus.className = `badge ${status === 'connected' ? 'bg-success' : status === 'connecting' ? 'bg-warning' : 'bg-danger'}`;
+            dbConnectionStatus.textContent = status === 'connected' ? '데이터베이스 연결됨' : status === 'connecting' ? '데이터베이스 연결 중' : '데이터베이스 연결 실패';
+        }
+    }
+
+    showSecurityWarning() {
+        const securityWarning = document.getElementById('securityWarning');
+        if (securityWarning) {
+            securityWarning.style.display = 'block';
+            setTimeout(() => {
+                securityWarning.style.display = 'none';
+            }, 15000);
+        }
+    }
+
+    showSecurityInfo() {
+        const questionsList = document.querySelector('.questions-list');
+        if (questionsList) {
+            const existingInfo = questionsList.querySelector('.alert-info');
+            if (!existingInfo) {
+                const securityInfo = `
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>데이터베이스 접근 권한:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>✅ 모든 사용자가 질문을 작성할 수 있습니다</li>
+                            <li>✅ 모든 사용자가 답변을 작성할 수 있습니다</li>
+                            <li>✅ 모든 사용자가 질문과 답변을 읽을 수 있습니다</li>
+                            <li>✅ 모든 사용자가 질문을 삭제할 수 있습니다</li>
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                `;
+                questionsList.insertAdjacentHTML('afterbegin', securityInfo);
+            }
+        }
+    }
+
+    showDbOperationStatus(message) {
+        const dbOperationStatus = document.getElementById('dbOperationStatus');
+        if (dbOperationStatus) {
+            if (message) {
+                dbOperationStatus.style.display = 'block';
+                dbOperationStatus.textContent = message;
+            } else {
+                dbOperationStatus.style.display = 'none';
+            }
+        }
+    }
+
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show position-fixed`;
+        notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        
+        const icon = type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle';
+        const iconColor = type === 'success' ? 'text-success' : type === 'error' ? 'text-danger' : 'text-info';
+        
+        notification.innerHTML = `
+            <i class="bi bi-${icon} ${iconColor} me-2"></i>
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // 5초 후 자동 제거
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 5000);
     }
 }
 
-@media (max-width: 992px) {
-    .main-content {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-    
-    .question-form-section {
-        position: static;
-    }
-    
-    .container-fluid {
-        padding: 1rem;
-    }
-}
+// 전역 변수로 질문 게시판 인스턴스 생성
+let questionBoard;
 
-@media (max-width: 768px) {
-    .container-fluid {
-        padding: 0.5rem;
-    }
-    
-    .question-form-section .card-body,
-    .questions-section .card-body {
-        padding: 1.5rem;
-    }
-    
-    .question-item {
-        margin: 0.75rem;
-        padding: 1.25rem;
-    }
-    
-    .question-actions {
-        flex-direction: column;
-    }
-    
-    .question-actions .btn {
-        width: 100%;
-    }
-    
-    .modal-body {
-        padding: 1.5rem;
-    }
-    
-    .firebase-status,
-    .db-connection-status,
-    .db-operation-status,
-    .security-warning {
-        padding: 1rem;
-        margin: 0.75rem 0;
-    }
-}
+// DOM이 로드된 후 초기화
+document.addEventListener('DOMContentLoaded', () => {
+    questionBoard = new QuestionBoard();
+});
 
-@media (max-width: 576px) {
-    .display-4 {
-        font-size: 2.5rem;
-    }
-    
-    .lead {
-        font-size: 1rem;
-    }
-    
-    .question-form-section .card-body,
-    .questions-section .card-body {
-        padding: 1rem;
-    }
-    
-    .question-item {
-        margin: 0.5rem;
-        padding: 1rem;
-    }
-    
-    .modal-body {
-        padding: 1rem;
-    }
-    
-    .modal-footer {
-        padding: 1rem;
-        flex-direction: column;
-    }
-    
-    .modal-footer .btn {
-        width: 100%;
-    }
-}
-
-/* 다크 모드 지원 */
-@media (prefers-color-scheme: dark) {
-    body {
-        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-        color: #ecf0f1;
-    }
-    
-    .card {
-        background-color: #34495e;
-        color: #ecf0f1;
-    }
-    
-    .form-control {
-        background-color: #2c3e50;
-        color: #ecf0f1;
-        border-color: #7f8c8d;
-    }
-    
-    .form-control:focus {
-        background-color: #2c3e50;
-        color: #ecf0f1;
-    }
-    
-    .question-item {
-        background-color: #34495e;
-        border-color: #7f8c8d;
-    }
-    
-    .answer-item {
-        background-color: #2c3e50;
-        border-color: #7f8c8d;
-    }
-    
-    .question-title {
-        color: #ecf0f1;
-    }
-    
-    .question-content,
-    .answer-content {
-        color: #bdc3c7;
-    }
-}
-
-/* 스크롤바 스타일 */
-.questions-container::-webkit-scrollbar {
-    width: 8px;
-}
-
-.questions-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.questions-container::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #007bff, #0056b3);
-    border-radius: 4px;
-}
-
-.questions-container::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #0056b3, #004085);
-}
-
-/* 애니메이션 */
-.question-item,
-.answer-item {
-    animation: fadeInUp 0.6s ease-out;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* 호버 효과 강화 */
-.question-item:hover .question-title {
-    color: #007bff;
-}
-
-.answer-item:hover .answer-content {
-    color: #495057;
-}
-
-/* 포커스 상태 개선 */
-.btn:focus,
-.form-control:focus {
-    outline: none;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-
-/* 접근성 개선 */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
-}
-
-/* 고대비 모드 지원 */
-@media (prefers-contrast: high) {
-    .btn {
-        border: 2px solid currentColor;
-    }
-    
-    .form-control {
-        border: 2px solid currentColor;
-    }
-    
-    .question-item,
-    .answer-item {
-        border: 2px solid currentColor;
-    }
-}
+// 전역 함수들 (HTML에서 직접 호출)
+window.questionBoard = questionBoard;

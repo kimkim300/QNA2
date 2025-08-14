@@ -67,6 +67,30 @@ class QuestionBoard {
             answerForm.addEventListener('submit', (e) => this.handleAnswerSubmit(e));
         }
 
+        // 삭제 확인 버튼
+        const deleteConfirmBtn = document.getElementById('deleteConfirmBtn');
+        if (deleteConfirmBtn) {
+            deleteConfirmBtn.addEventListener('click', () => this.confirmDeleteQuestion());
+        }
+
+        // 이벤트 위임을 사용한 동적 버튼 이벤트
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.answer-btn')) {
+                const questionId = e.target.closest('.answer-btn').dataset.questionId;
+                this.openAnswerModal(questionId);
+            } else if (e.target.closest('.delete-btn')) {
+                const questionId = e.target.closest('.delete-btn').dataset.questionId;
+                this.openDeleteModal(questionId);
+            } else if (e.target.closest('.page-link-prev') || e.target.closest('.page-link-next') || e.target.closest('.page-link-number')) {
+                e.preventDefault();
+                const pageLink = e.target.closest('.page-link');
+                if (pageLink && !pageLink.parentElement.classList.contains('disabled')) {
+                    const page = parseInt(pageLink.dataset.page);
+                    this.goToPage(page);
+                }
+            }
+        });
+
         // 모달 이벤트 설정
         this.setupModalEvents();
     }
@@ -313,10 +337,10 @@ class QuestionBoard {
                     <div class="d-flex justify-content-between align-items-start mb-2">
                         <h5 class="card-title mb-0 fw-bold text-primary">${this.escapeHtml(question.title)}</h5>
                         <div class="d-flex gap-2">
-                            <button class="btn btn-sm btn-outline-primary" onclick="questionBoard.openAnswerModal('${question.id}')">
+                            <button class="btn btn-sm btn-outline-primary answer-btn" data-question-id="${question.id}">
                                 <i class="bi bi-chat-dots"></i> 답변
                             </button>
-                            <button class="btn btn-sm btn-outline-danger" onclick="questionBoard.openDeleteModal('${question.id}')">
+                            <button class="btn btn-sm btn-outline-danger delete-btn" data-question-id="${question.id}">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </div>
@@ -385,7 +409,7 @@ class QuestionBoard {
         // 이전 페이지 버튼
         paginationHTML += `
             <li class="page-item ${this.currentPage === 1 ? 'disabled' : ''}">
-                <a class="page-link" href="#" onclick="questionBoard.goToPage(${this.currentPage - 1})">
+                <a class="page-link page-link-prev" href="#" data-page="${this.currentPage - 1}">
                     <i class="bi bi-chevron-left"></i>
                 </a>
             </li>
@@ -396,7 +420,7 @@ class QuestionBoard {
             if (i === 1 || i === totalPages || (i >= this.currentPage - 1 && i <= this.currentPage + 1)) {
                 paginationHTML += `
                     <li class="page-item ${i === this.currentPage ? 'active' : ''}">
-                        <a class="page-link" href="#" onclick="questionBoard.goToPage(${i})">${i}</a>
+                        <a class="page-link page-link-number" href="#" data-page="${i}">${i}</a>
                     </li>
                 `;
             } else if (i === this.currentPage - 2 || i === this.currentPage + 2) {
@@ -407,7 +431,7 @@ class QuestionBoard {
         // 다음 페이지 버튼
         paginationHTML += `
             <li class="page-item ${this.currentPage === totalPages ? 'disabled' : ''}">
-                <a class="page-link" href="#" onclick="questionBoard.goToPage(${this.currentPage + 1})">
+                <a class="page-link page-link-next" href="#" data-page="${this.currentPage + 1}">
                     <i class="bi bi-chevron-right"></i>
                 </a>
             </li>

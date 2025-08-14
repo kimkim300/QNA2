@@ -21,6 +21,7 @@ class QuestionBoard {
     constructor() {
         this.questions = [];
         this.currentQuestionId = null;
+        this.deleteQuestionId = null;
         this.currentPage = 1;
         this.questionsPerPage = 5;
         this.db = db;

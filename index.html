@@ -4,152 +4,293 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>질문 게시판</title>
+    
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gray-50">
-    <div class="container-fluid px-4 py-5">
-        <header class="text-center mb-5">
-            <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl p-8 shadow-2xl">
-                <h1 class="display-4 fw-bold mb-3 text-shadow">질문 게시판</h1>
-                <p class="lead opacity-90">궁금한 점을 질문하고 답변을 받아보세요!</p>
-            </div>
-        </header>
+    <div class="container-fluid py-4">
+        <!-- 헤더 -->
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold text-primary mb-2">
+                <i class="bi bi-question-circle-fill me-3"></i>
+                질문 게시판
+            </h1>
+            <p class="lead text-muted">궁금한 것을 물어보고 답변을 받아보세요!</p>
+        </div>
 
-        <div class="row g-4">
+        <!-- Firebase 연결 상태 표시 -->
+        <div class="firebase-status loading" id="firebaseStatus">
+            <i class="bi bi-arrow-clockwise"></i>
+            Firebase 연결 중...
+        </div>
+        
+        <!-- 데이터베이스 연결 상태 -->
+        <div class="db-connection-status loading" id="dbConnectionStatus">
+            <i class="bi bi-database"></i>
+            Firestore 연결 중...
+        </div>
+        
+        <!-- 데이터베이스 작업 상태 -->
+        <div class="db-operation-status" id="dbOperationStatus">
+            <i class="bi bi-arrow-clockwise"></i>
+            데이터 처리 중...
+        </div>
+        
+        <!-- 보안 경고 메시지 -->
+        <div class="security-warning" id="securityWarning" style="display: none;">
+            <i class="bi bi-shield-check"></i>
+            <div>
+                <strong>데이터베이스 상태:</strong> 현재 모든 사용자가 질문과 답변을 자유롭게 작성할 수 있습니다. 
+                이는 공개 질문 게시판에 적합한 설정입니다.
+            </div>
+        </div>
+
+        <!-- 메인 콘텐츠 -->
+        <div class="main-content">
             <!-- 질문 작성 폼 (왼쪽) -->
-            <div class="col-lg-4">
-                <section class="question-form bg-white rounded-3 shadow-lg p-4 sticky-top" style="top: 2rem;">
-                    <h2 class="h4 text-dark mb-4 fw-bold">
-                        <i class="bi bi-plus-circle-fill text-primary me-2"></i>
-                        새 질문 작성
-                    </h2>
-                    <form id="questionForm">
-                        <div class="mb-3">
-                            <label for="questionTitle" class="form-label fw-semibold text-secondary">제목</label>
-                            <input type="text" class="form-control form-control-lg border-2" id="questionTitle" name="title" required placeholder="질문 제목을 입력하세요">
-                        </div>
-                        <div class="mb-3">
-                            <label for="questionContent" class="form-label fw-semibold text-secondary">내용</label>
-                            <textarea class="form-control border-2" id="questionContent" name="content" required placeholder="질문 내용을 자세히 작성해주세요" rows="5"></textarea>
-                        </div>
-                        <div class="mb-4">
-                            <label for="authorName" class="form-label fw-semibold text-secondary">작성자</label>
-                            <input type="text" class="form-control border-2" id="authorName" name="author" required placeholder="이름을 입력하세요">
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm">
-                            <i class="bi bi-send me-2"></i>질문 등록
-                        </button>
-                    </form>
-                </section>
+            <div class="question-form-section">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="card-title mb-0">
+                            <i class="bi bi-plus-circle me-2"></i>
+                            새 질문 작성
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="questionForm" novalidate>
+                            <div class="mb-3">
+                                <label for="questionTitle" class="form-label fw-bold">
+                                    <i class="bi bi-chat-quote me-2"></i>
+                                    질문 제목
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control form-control-lg" 
+                                    id="questionTitle" 
+                                    placeholder="질문 제목을 입력하세요"
+                                    required
+                                    autocomplete="off"
+                                    spellcheck="false"
+                                >
+                            </div>
+                            <div class="mb-3">
+                                <label for="questionContent" class="form-label fw-bold">
+                                    <i class="bi bi-text-paragraph me-2"></i>
+                                    질문 내용
+                                </label>
+                                <textarea 
+                                    class="form-control" 
+                                    id="questionContent" 
+                                    rows="5" 
+                                    placeholder="질문 내용을 자세히 설명해주세요"
+                                    required
+                                    autocomplete="off"
+                                    spellcheck="false"
+                                    style="resize: vertical; min-height: 100px;"
+                                ></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="authorName" class="form-label fw-bold">
+                                    <i class="bi bi-person me-2"></i>
+                                    작성자
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="authorName" 
+                                    placeholder="이름을 입력하세요 (선택사항)"
+                                    autocomplete="off"
+                                    spellcheck="false"
+                                >
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="bi bi-send me-2"></i>
+                                질문 등록
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
 
             <!-- 질문 목록 (오른쪽) -->
-            <div class="col-lg-8">
-                <section class="questions-list bg-white rounded-3 shadow-lg p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2 class="h4 text-dark mb-0 fw-bold">
-                            <i class="bi bi-question-circle-fill text-success me-2"></i>
+            <div class="questions-section">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                        <h3 class="card-title mb-0">
+                            <i class="bi bi-list-ul me-2"></i>
                             질문 목록
-                        </h2>
-                        <span class="badge bg-primary fs-6" id="questionCount">0개</span>
+                        </h3>
+                        <span class="badge bg-light text-dark fs-6" id="questionCount">0개</span>
                     </div>
-                    <div id="questionsContainer">
-                        <!-- 질문들이 여기에 동적으로 추가됩니다 -->
+                    <div class="card-body p-0">
+                        <div id="questionsList" class="questions-container">
+                            <!-- 질문들이 여기에 동적으로 렌더링됩니다 -->
+                        </div>
+                        
+                        <!-- 페이지네이션 -->
+                        <div id="pagination" class="pagination-container p-3 text-center">
+                            <!-- 페이지네이션 컨트롤이 여기에 렌더링됩니다 -->
+                        </div>
                     </div>
-                    
-                    <!-- 페이지네이션 -->
-                    <div class="pagination-container mt-4" id="pagination">
-                        <!-- 페이지네이션 버튼들이 여기에 동적으로 추가됩니다 -->
-                    </div>
-                </section>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- 답변 모달 -->
+    <!-- 답변 작성 모달 -->
     <div class="modal fade" id="answerModal" tabindex="-1" aria-labelledby="answerModalLabel" aria-hidden="true" style="z-index: 1050;">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-                    <h5 class="modal-title fw-bold" id="answerModalLabel">
-                        <i class="bi bi-chat-dots-fill me-2"></i>답변 작성
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title" id="answerModalLabel">
+                        <i class="bi bi-chat-dots me-2"></i>
+                        답변 작성
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body p-4">
-                    <form id="answerForm" novalidate>
-                        <input type="hidden" id="questionId" name="questionId">
-                        <div class="mb-3">
-                            <label for="answerContent" class="form-label fw-semibold text-secondary">답변 내용</label>
-                            <textarea 
-                                class="form-control border-2" 
-                                id="answerContent" 
-                                name="content" 
-                                required 
-                                placeholder="답변을 작성해주세요" 
-                                rows="4"
-                                autocomplete="off"
-                                spellcheck="false"
-                                style="resize: vertical; min-height: 100px;"
-                            ></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="answerAuthor" class="form-label fw-semibold text-secondary">작성자</label>
-                            <input 
-                                type="text" 
-                                class="form-control border-2" 
-                                id="answerAuthor" 
-                                name="author" 
-                                required 
-                                placeholder="이름을 입력하세요"
-                                autocomplete="off"
-                                spellcheck="false"
-                            >
-                        </div>
-                    </form>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="answerContent" class="form-label fw-bold">
+                            <i class="bi bi-pencil me-2"></i>
+                            답변 내용
+                        </label>
+                        <textarea 
+                            class="form-control" 
+                            id="answerContent" 
+                            rows="6" 
+                            placeholder="답변을 작성해주세요"
+                            required
+                            autocomplete="off"
+                            spellcheck="false"
+                            style="resize: vertical; min-height: 100px;"
+                        ></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="answerAuthor" class="form-label fw-bold">
+                            <i class="bi bi-person me-2"></i>
+                            답변자
+                        </label>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="answerAuthor" 
+                            placeholder="이름을 입력하세요 (선택사항)"
+                            autocomplete="off"
+                            spellcheck="false"
+                        >
+                    </div>
                 </div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                    <button type="submit" form="answerForm" class="btn btn-primary fw-bold">
-                        <i class="bi bi-check-circle me-2"></i>답변 등록
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-2"></i>
+                        취소
+                    </button>
+                    <button type="button" class="btn btn-info" id="submitAnswer">
+                        <i class="bi bi-check-circle me-2"></i>
+                        답변 등록
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 삭제 확인 모달 -->
+    <!-- 질문 삭제 확인 모달 -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true" style="z-index: 1050;">
         <div class="modal-dialog">
-            <div class="modal-content border-0 shadow-lg">
+            <div class="modal-content">
                 <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title fw-bold" id="deleteModalLabel">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i>질문 삭제
+                    <h5 class="modal-title" id="deleteModalLabel">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        질문 삭제 확인
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body p-4">
-                    <p class="mb-0 text-dark">정말로 이 질문을 삭제하시겠습니까?</p>
-                    <p class="text-muted small mt-2">삭제된 질문은 복구할 수 없습니다.</p>
+                <div class="modal-body">
+                    <p class="mb-0">
+                        <i class="bi bi-question-circle me-2"></i>
+                        정말로 이 질문을 삭제하시겠습니까?
+                    </p>
+                    <p class="text-muted small mt-2">
+                        삭제된 질문은 복구할 수 없습니다.
+                    </p>
                 </div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                    <button type="button" class="btn btn-danger fw-bold" id="confirmDelete">
-                        <i class="bi bi-trash me-2"></i>삭제
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-2"></i>
+                        취소
+                    </button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete">
+                        <i class="bi bi-trash me-2"></i>
+                        삭제
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- 알림 토스트 -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1060;">
+        <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <i class="bi bi-info-circle me-2" id="toastIcon"></i>
+                <strong class="me-auto" id="toastTitle">알림</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toastBody">
+                <!-- 알림 내용이 여기에 표시됩니다 -->
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Firebase SDK v9+ (모듈 방식) -->
+    <script type="module">
+        // Firebase 설정 - 실제 Firebase 프로젝트 정보
+        const firebaseConfig = {
+            apiKey: "AIzaSyD4EmClvytRl8k2aS4Y98oIn7oTYIS8g_4",
+            authDomain: "qna0814-f372c.firebaseapp.com",
+            projectId: "qna0814-f372c",
+            storageBucket: "qna0814-f372c.firebasestorage.app",
+            messagingSenderId: "30085800074",
+            appId: "1:30085800074:web:2a04dda72bf3c0498d0d73",
+            measurementId: "G-LEB0WZR84M"
+        };
+
+        // Firebase 초기화
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, orderBy, query, serverTimestamp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        // 전역 변수로 노출
+        window.firebase = { app, db };
+        window.db = db;
+        window.firebaseFunctions = {
+            collection,
+            addDoc,
+            getDocs,
+            doc,
+            updateDoc,
+            deleteDoc,
+            orderBy,
+            query,
+            serverTimestamp
+        };
+        
+        console.log('Firebase v9+ 초기화 완료');
+    </script>
+    
+    <!-- 애플리케이션 스크립트 -->
     <script src="script.js"></script>
 </body>
 </html>
